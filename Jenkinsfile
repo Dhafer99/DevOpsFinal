@@ -18,7 +18,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Dhafer99/jenkinstest.git'
+                git branch: 'main', url: 'https://github.com/Dhafer99/DevOpsFinal.git'
             }
         }
 
