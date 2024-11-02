@@ -5,15 +5,14 @@ pipeline {
         pollSCM('H/20 * * * *')
     }
 
-    environment {
-        SONARQUBE_SERVER = 'SonarQube'
-        SONAR_TOKEN = credentials('SONAR')
-         IMAGE_NAME = "springbootprojectdevops" // Name of the Docker image to be built
-         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
-          DOCKER_USER = 'dhafersouid'
-          DOCKER_PASS = '@master123'
+   environment {
+       SONARQUBE_SERVER = 'SonarQube'
+       SONAR_TOKEN = credentials('SONAR')
+       IMAGE_NAME = "springbootprojectdevops" // Name of the Docker image to be built
+       DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+       DOCKER_CREDENTIALS = credentials('dockerhubcredentials')
+   }
 
-    }
 
     stages {
         stage('GIT') {
@@ -80,13 +79,12 @@ pipeline {
               steps {
                   script {
                       echo "Logging in and pushing Docker image"
-
-                          sh "docker login -u $DOCKER_USER -p $DOCKER_PASS"
-                          sh "docker push $IMAGE_NAME"
-                      }
-
+                      sh "echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin"
+                      sh "docker push $IMAGE_NAME"
+                  }
               }
           }
+
           stage('Docker Compose Down') {
                       steps {
                           script {
