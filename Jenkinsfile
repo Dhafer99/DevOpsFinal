@@ -8,7 +8,7 @@ pipeline {
     environment {
         SONARQUBE_SERVER = 'SonarQube'
         SONAR_TOKEN = credentials('SONAR')
-         IMAGE_NAME = "SpringBootProjectImage" // Name of the Docker image to be built
+         IMAGE_NAME = "springbootprojectdevops" // Name of the Docker image to be built
          DOCKER_COMPOSE_FILE = 'docker-compose.yml'
     }
 
