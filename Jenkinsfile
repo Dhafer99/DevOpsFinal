@@ -8,6 +8,8 @@ pipeline {
     environment {
         SONARQUBE_SERVER = 'SonarQube'
         SONAR_TOKEN = credentials('SONAR')
+         IMAGE_NAME = "SpringBootProjectImage" // Name of the Docker image to be built
+         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
     }
 
     stages {
@@ -55,6 +57,44 @@ pipeline {
                         sh 'mvn deploy'
                     }
                 }
+          stage('Building Image') {
+                            steps {
+                             echo "Building Docker image"
+                             sh "docker build -t $IMAGE_NAME ."
+                            }
+                        }
+
+          stage('Docker Compose Up') {
+                      steps {
+                          script {
+                              echo 'Starting Docker Compose services'
+                              sh "docker-compose -f $DOCKER_COMPOSE_FILE up -d"
+                          }
+                      }
+                  }
+
+          stage('Push Docker Image') {
+              steps {
+                  script {
+                      echo "Logging in and pushing Docker image"
+                      withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                          sh "docker login -u $DOCKER_USER -p $DOCKER_PASS"
+                          sh "docker push $IMAGE_NAME:$IMAGE_TAG"
+                      }
+                  }
+              }
+          }
+          stage('Docker Compose Down') {
+                      steps {
+                          script {
+                              echo 'Stopping and removing Docker Compose services'
+                              sh "docker-compose -f $DOCKER_COMPOSE_FILE down"
+                          }
+                      }
+                  }
+
+
+
 
         stage('Show Date') {
             steps {
