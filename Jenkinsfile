@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         SONARQUBE_SERVER = 'SonarQube'
+        SONAR_TOKEN = credentials('SONAR')
     }
 
     stages {
@@ -32,12 +33,9 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo 'Running SonarQube Analysis'
-                withSonarQubeEnv('SonarQube') {
-                    withCredentials([usernamePassword(credentialsId: '2',
-                                                      usernameVariable: 'SONAR_USER',
-                                                      passwordVariable: 'SONAR_PASS')]) {
-                        sh 'mvn sonar:sonar -Dsonar.login=$SONAR_USER -Dsonar.password=$SONAR_PASS'
-                    }
+
+                        sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
+
                 }
             }
         }
