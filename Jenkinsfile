@@ -10,6 +10,9 @@ pipeline {
         SONAR_TOKEN = credentials('SONAR')
          IMAGE_NAME = "springbootprojectdevops" // Name of the Docker image to be built
          DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+          DOCKER_USER = 'dhafersouid'
+          DOCKER_PASS = '@master123'
+           IMAGE_TAG = "${BUILD_NUMBER}"  // Unique tag per Jenkins build
     }
 
     stages {
@@ -77,11 +80,11 @@ pipeline {
               steps {
                   script {
                       echo "Logging in and pushing Docker image"
-                      withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+
                           sh "docker login -u $DOCKER_USER -p $DOCKER_PASS"
                           sh "docker push $IMAGE_NAME:$IMAGE_TAG"
                       }
-                  }
+
               }
           }
           stage('Docker Compose Down') {
