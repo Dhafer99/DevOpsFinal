@@ -37,7 +37,7 @@ pipeline {
                         sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
 
                 }
-            }
+            
         }
 
         stage('Show Date') {
