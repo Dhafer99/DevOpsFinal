@@ -49,7 +49,7 @@ pipeline {
                     }
                 }
 
-        stage('Show Date') {
+        stage('Deployment') {
                     steps {
                         echo 'Running Deployment'
                         sh 'mvn deploy'
