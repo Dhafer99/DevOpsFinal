@@ -30,14 +30,23 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            steps {
+                echo 'Running Unit Tests'
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml' // Archiving test results
+                }
+            }
+        }
+
         stage('SonarQube Analysis') {
             steps {
                 echo 'Running SonarQube Analysis'
-
-                        sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
-
-                }
-            
+                sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
+            }
         }
 
         stage('Show Date') {
