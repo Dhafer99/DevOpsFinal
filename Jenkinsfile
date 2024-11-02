@@ -30,17 +30,6 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                echo 'Running Unit Tests'
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml' // Archiving test results
-                }
-            }
-        }
 
         stage('SonarQube Analysis') {
             steps {
@@ -48,6 +37,24 @@ pipeline {
                 sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
             }
         }
+        stage('Test') {
+                    steps {
+                        echo 'Running Unit Tests'
+                        sh 'mvn test'
+                    }
+                    post {
+                        always {
+                            junit '**/target/surefire-reports/*.xml' // Archiving test results
+                        }
+                    }
+                }
+
+        stage('Show Date') {
+                    steps {
+                        echo 'Running Deployment'
+                        sh 'mvn deploy'
+                    }
+                }
 
         stage('Show Date') {
             steps {
