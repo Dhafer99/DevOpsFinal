@@ -60,7 +60,7 @@ pipeline {
           stage('Building Image') {
                             steps {
                              echo "Building Docker image"
-                             sh "docker build -t $IMAGE_NAME ."
+                             sh "sudo docker build -t $IMAGE_NAME ."
                             }
                         }
 
