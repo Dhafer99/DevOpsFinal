@@ -70,7 +70,7 @@ pipeline {
                       steps {
                           script {
                               echo 'Starting Docker Compose services'
-                              sh "docker-compose -f $DOCKER_COMPOSE_FILE up -d"
+                              sh "docker compose -f $DOCKER_COMPOSE_FILE up -d"
                           }
                       }
                   }
@@ -89,7 +89,7 @@ pipeline {
                       steps {
                           script {
                               echo 'Stopping and removing Docker Compose services'
-                              sh "docker-compose -f $DOCKER_COMPOSE_FILE down"
+                              sh "docker compose -f $DOCKER_COMPOSE_FILE down"
                           }
                       }
                   }
