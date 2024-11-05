@@ -27,33 +27,12 @@ pipeline {
             }
         }
 
-        stage('Clean') {
-                    steps {
-                        sh 'mvn clean'
-                    }
-                }
-
-                stage('Compile') {
-                    steps {
-                        sh 'mvn compile'
-                    }
-                }
-
-
-
-                stage('Package') {
-                    steps {
-                        sh 'mvn package'
-                    }
-                }
-
-                stage('Install') {
-                    steps {
-                        sh 'mvn install'
-                    }
-                }
-
-
+        stage('Build') {
+            steps {
+                echo 'Running Maven clean and install'
+                sh 'mvn clean install'
+            }
+        }
 
 
         stage('SonarQube Analysis') {
@@ -91,18 +70,10 @@ pipeline {
                       steps {
                           script {
                               echo 'Starting Docker Compose services'
-                              sh "docker-compose up -d "
+                              sh "docker compose -f $DOCKER_COMPOSE_FILE up -d"
                           }
                       }
                   }
-          stage('Docker Compose Down') {
-                                steps {
-                                    script {
-                                        echo 'Stopping and removing Docker Compose services'
-                                        sh "docker-compose  down"
-                                    }
-                                }
-                            }
 
           stage('Push Docker Image') {
               steps {
@@ -114,7 +85,14 @@ pipeline {
               }
           }
 
-
+          stage('Docker Compose Down') {
+                      steps {
+                          script {
+                              echo 'Stopping and removing Docker Compose services'
+                              sh "docker compose -f $DOCKER_COMPOSE_FILE down"
+                          }
+                      }
+                  }
 
 
 
