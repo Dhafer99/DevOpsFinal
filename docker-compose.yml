@@ -9,33 +9,29 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8082:8082"
+    networks:
+      - app-network
     environment:
-       SPRING_DATASOURCE_URL : jdbc:mysql://db:3306/devopsfinal?createDatabaseIfNotExist=true
-       SPRING_DATASOURCE_USERNAME : root
-       SPRING_DATASOURCE_PASSWORD: ""
-       SPRING_JPA_SHOW_SQL: "true"
-       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/devopsfinal?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     depends_on:
       - db
 
   db:
     image: mysql:8.0
+    container_name: devopsfinal_db
     environment:
-      MYSQL_ROOT_PASSWORD: ""
-      MYSQL_DATABASE: devops
-      MYSQL_USER: root
-      MYSQL_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: devopsfinal
     ports:
       - "3306:3306"
     volumes:
-      - db-data:/var/lib/mysql
+      - db_data:/var/lib/mysql
     networks:
       - app-network
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
@@ -43,8 +39,8 @@ services:
 
 
 
-volumes:
-  db-data:
 
+volumes:
+  db_data:
 networks:
   app-network:
