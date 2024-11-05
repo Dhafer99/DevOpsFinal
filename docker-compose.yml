@@ -12,7 +12,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/devopsfinal?createDatabaseIfNotExist=true
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD= # Update with a secure password if needed
+      - SPRING_DATASOURCE_PASSWORD=rootpassword # Update with a secure password if needed
       - SPRING_JPA_SHOW_SQL=true
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     depends_on:
