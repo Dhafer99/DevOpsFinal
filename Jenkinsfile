@@ -27,12 +27,37 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                echo 'Running Maven clean and install'
-                sh 'mvn clean install'
-            }
-        }
+        stage('Clean') {
+                    steps {
+                        sh 'mvn clean'
+                    }
+                }
+
+                stage('Compile') {
+                    steps {
+                        sh 'mvn compile'
+                    }
+                }
+
+                stage('Test') {
+                    steps {
+                        sh 'mvn test'
+                    }
+                }
+
+                stage('Package') {
+                    steps {
+                        sh 'mvn package'
+                    }
+                }
+
+                stage('Install') {
+                    steps {
+                        sh 'mvn install'
+                    }
+                }
+
+
 
 
         stage('SonarQube Analysis') {
@@ -70,10 +95,18 @@ pipeline {
                       steps {
                           script {
                               echo 'Starting Docker Compose services'
-                              sh "docker-compose up -d --no-recreate"
+                              sh "docker-compose up -d "
                           }
                       }
                   }
+          stage('Docker Compose Down') {
+                                steps {
+                                    script {
+                                        echo 'Stopping and removing Docker Compose services'
+                                        sh "docker-compose  down"
+                                    }
+                                }
+                            }
 
           stage('Push Docker Image') {
               steps {
@@ -85,14 +118,7 @@ pipeline {
               }
           }
 
-          stage('Docker Compose Down') {
-                      steps {
-                          script {
-                              echo 'Stopping and removing Docker Compose services'
-                              sh "docker-compose  down"
-                          }
-                      }
-                  }
+
 
 
 
